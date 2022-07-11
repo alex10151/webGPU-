@@ -7,11 +7,12 @@ const useDevice = (adapter: GPUAdapter | null | undefined) => {
       ?.requestDevice({
         requiredFeatures: ['texture-compression-etc2'],
         requiredLimits: {
-          maxstorageBufferBindingSize:
+          maxStorageBufferBindingSize:
             adapter.limits.maxStorageBufferBindingSize,
         },
       })
       .then((item) => {
+        console.log('i', item);
         setDevice(item);
       });
   }, [adapter]);

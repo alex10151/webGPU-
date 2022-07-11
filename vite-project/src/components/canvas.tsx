@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { useRef, useMemo, useEffect } from 'react';
 
 /**
  *  获取浏览器默认颜色配置
  * @returns
  */
-const useDefaultColorFormat = () => {
+export const useDefaultColorFormat = () => {
   const format = useRef<GPUTextureFormat>('rgba8unorm');
   if (navigator.gpu) {
     format.current = navigator.gpu?.getPreferredCanvasFormat();
@@ -26,11 +27,12 @@ export const useCanvas = (
   },
 ) => {
   const canvasRef = useRef<any>(null);
+  const [context, setContext] = useState<GPUCanvasContext>();
   const format = useDefaultColorFormat();
   const dom = useMemo(
     () => (
       <canvas
-        ref={canvasRef.current}
+        ref={canvasRef}
         width={options?.width || 700}
         height={options?.height || 700}
       />
@@ -44,10 +46,13 @@ export const useCanvas = (
       ctx.configure({
         device,
         format: format.current,
+        alphaMode: 'opaque',
       });
+      setContext(ctx);
     }
   }, [device]);
   return {
     dom,
+    context,
   };
 };
