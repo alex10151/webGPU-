@@ -4,13 +4,16 @@ import { useWebGpu } from './device';
 import { usePipeline } from './pipeline';
 
 /**
- *  容器
- * @returns
+ *  录制命令
+ * @param device
+ * @param context
+ * @param pipeline
  */
-const Container = () => {
-  const { device } = useWebGpu();
-  const { dom: canvas, context } = useCanvas(device);
-  const pipeline = usePipeline(device);
+const useCommandsEffect = (
+  device: GPUDevice | null | undefined,
+  context: GPUCanvasContext | undefined,
+  pipeline: GPURenderPipeline | undefined,
+) => {
   useEffect(() => {
     if (device && context && pipeline) {
       const encoder = device.createCommandEncoder();
@@ -31,6 +34,17 @@ const Container = () => {
       device.queue.submit([commandBuffer]);
     }
   }, [device, context, pipeline]);
+};
+
+/**
+ *  容器
+ * @returns
+ */
+const Container = () => {
+  const { device } = useWebGpu();
+  const { dom: canvas, context } = useCanvas(device);
+  const pipeline = usePipeline(device);
+  useCommandsEffect(device, context, pipeline);
   return canvas;
 };
 

@@ -26,7 +26,7 @@ export const useCanvas = (
     height: number;
   },
 ) => {
-  const canvasRef = useRef<any>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [context, setContext] = useState<GPUCanvasContext>();
   const format = useDefaultColorFormat();
   const dom = useMemo(
@@ -42,13 +42,16 @@ export const useCanvas = (
 
   useEffect(() => {
     if (device && canvasRef.current) {
-      const ctx: GPUCanvasContext = canvasRef.current.getContext('webgpu');
-      ctx.configure({
-        device,
-        format: format.current,
-        alphaMode: 'opaque',
-      });
-      setContext(ctx);
+      const ctx: GPUCanvasContext | null =
+        canvasRef.current.getContext('webgpu');
+      if (ctx) {
+        ctx.configure({
+          device,
+          format: format.current,
+          alphaMode: 'opaque',
+        });
+        setContext(ctx);
+      }
     }
   }, [device]);
   return {

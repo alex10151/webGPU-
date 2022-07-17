@@ -1,14 +1,19 @@
-import { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Container from './components/container';
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
 
-function App() {
+const useRouteDom = () => {
   return (
-    <div className="container">
-      <Container />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Container />} />
+      </Routes>
+    </BrowserRouter>
   );
+};
+function App() {
+  const dom = useRouteDom();
+  return <div className="container">{dom}</div>;
 }
 
 export default App;
